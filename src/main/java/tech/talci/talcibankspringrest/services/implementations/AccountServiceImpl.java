@@ -2,7 +2,7 @@ package tech.talci.talcibankspringrest.services.implementations;
 
 import lombok.AllArgsConstructor;
 import tech.talci.talcibankspringrest.api.v1.mapper.AccountMapper;
-import tech.talci.talcibankspringrest.api.v1.model.AccountDTO;
+import tech.talci.talcibankspringrest.api.v1.dto.AccountDTO;
 import tech.talci.talcibankspringrest.domain.Account;
 import tech.talci.talcibankspringrest.domain.User;
 import tech.talci.talcibankspringrest.exceptions.ResourceNotFoundException;

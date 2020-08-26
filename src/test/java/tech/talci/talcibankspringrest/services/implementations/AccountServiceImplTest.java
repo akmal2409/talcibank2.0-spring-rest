@@ -4,18 +4,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import tech.talci.talcibankspringrest.api.v1.model.AccountDTO;
+import tech.talci.talcibankspringrest.api.v1.dto.AccountDTO;
 import tech.talci.talcibankspringrest.domain.Account;
 import tech.talci.talcibankspringrest.repositories.AccountRepository;
 import tech.talci.talcibankspringrest.repositories.UserRepository;
 import tech.talci.talcibankspringrest.services.AccountService;
 
-import javax.print.attribute.standard.MediaSize;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

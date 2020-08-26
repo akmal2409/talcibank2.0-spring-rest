@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class Account {
 
     private String name;
 
+    @NotEmpty(message = "Account name is required")
     private Long number;
 
     @ManyToOne(fetch = FetchType.LAZY)

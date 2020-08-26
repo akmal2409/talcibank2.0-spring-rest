@@ -2,13 +2,8 @@ package tech.talci.talcibankspringrest.controllers.v1;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tech.talci.talcibankspringrest.api.v1.mapper.AccountMapper;
-import tech.talci.talcibankspringrest.api.v1.model.AccountDTO;
-import tech.talci.talcibankspringrest.domain.Account;
-import tech.talci.talcibankspringrest.repositories.AccountRepository;
-import tech.talci.talcibankspringrest.repositories.UserRepository;
+import tech.talci.talcibankspringrest.api.v1.dto.AccountDTO;
 import tech.talci.talcibankspringrest.services.AccountService;
 
 @RestController

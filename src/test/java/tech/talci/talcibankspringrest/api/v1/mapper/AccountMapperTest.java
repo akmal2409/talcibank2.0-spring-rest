@@ -1,9 +1,8 @@
 package tech.talci.talcibankspringrest.api.v1.mapper;
 
-import com.sun.mail.imap.protocol.UIDSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import tech.talci.talcibankspringrest.api.v1.model.AccountDTO;
+import tech.talci.talcibankspringrest.api.v1.dto.AccountDTO;
 import tech.talci.talcibankspringrest.domain.*;
 
 import java.math.BigDecimal;

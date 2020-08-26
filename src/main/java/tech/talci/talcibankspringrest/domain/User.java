@@ -3,9 +3,11 @@ package tech.talci.talcibankspringrest.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,8 +42,14 @@ public class User {
     private String secretPhrase;
 
     private Instant created;
+
+    @NotEmpty(message = "Username is required")
     private String username;
+
+    @NotEmpty(message = "Password is required")
     private String password;
+
+    @NotEmpty(message = "Email is required")
     private String email;
     private boolean enabled = false;
 

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.math.BigDecimal;
 import java.time.Instant;
 
@@ -24,6 +25,7 @@ public class CardTransfer {
     @JoinColumn(name = "card_id")
     private Card card;
 
+    @NotEmpty(message = "Transfer description is required")
     private String description;
 
     private BigDecimal amount;

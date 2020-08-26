@@ -2,12 +2,11 @@ package tech.talci.talcibankspringrest.api.v1.mapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import tech.talci.talcibankspringrest.api.v1.model.CardDTO;
+import tech.talci.talcibankspringrest.api.v1.dto.CardDTO;
 import tech.talci.talcibankspringrest.domain.*;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;

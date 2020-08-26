@@ -1,9 +1,6 @@
 package tech.talci.talcibankspringrest.services;
 
-import tech.talci.talcibankspringrest.api.v1.model.AccountDTO;
-import tech.talci.talcibankspringrest.domain.Account;
-
-import java.util.List;
+import tech.talci.talcibankspringrest.api.v1.dto.AccountDTO;
 
 public interface AccountService{
 
