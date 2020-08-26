@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -43,5 +44,7 @@ public class Card {
 
     private BigDecimal balance;
 
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CardTransfer> cardTransfers;
     private int cvv;
 }

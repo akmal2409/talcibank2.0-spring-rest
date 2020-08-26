@@ -21,6 +21,7 @@ public class BankTransfer {
     private Instant date;
 
     @ManyToOne
+    @JoinColumn(name = "account_id")
     private Account sender;
 
     private String description;

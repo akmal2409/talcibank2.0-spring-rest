@@ -21,8 +21,8 @@ public class CardTransfer {
     private Instant date;
 
     @ManyToOne
-    @Column(name = "from_card")
-    private Card fromCard;
+    @JoinColumn(name = "card_id")
+    private Card card;
 
     private String description;
 

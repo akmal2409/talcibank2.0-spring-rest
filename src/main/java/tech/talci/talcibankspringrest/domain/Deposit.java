@@ -21,4 +21,7 @@ public class Deposit {
 
     @ManyToOne
     private Account account;
+
+    @Enumerated(value = EnumType.STRING)
+    private DepositType depositType;
 }

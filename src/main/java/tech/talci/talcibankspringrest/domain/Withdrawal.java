@@ -22,4 +22,7 @@ public class Withdrawal {
 
     @ManyToOne
     private Account account;
+
+    @Enumerated(value = EnumType.STRING)
+    WithdrawalType withdrawalType;
 }
