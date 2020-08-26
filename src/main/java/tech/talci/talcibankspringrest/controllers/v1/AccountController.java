@@ -9,17 +9,18 @@ import tech.talci.talcibankspringrest.api.v1.model.AccountDTO;
 import tech.talci.talcibankspringrest.domain.Account;
 import tech.talci.talcibankspringrest.repositories.AccountRepository;
 import tech.talci.talcibankspringrest.repositories.UserRepository;
+import tech.talci.talcibankspringrest.services.AccountService;
 
 @RestController
-@RequestMapping(AccountController.BASE_URL)
+@RequestMapping("/api/{userId}/account")
 @AllArgsConstructor
 public class AccountController {
 
-    static final String BASE_URL = "/api/v1/account";
+    private final AccountService accountService;
 
-    @PostMapping("/{userId}")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public AccountDTO createAccount(@RequestBody AccountDTO accountDTO, @PathVariable Long userId){
-        return null;
+        return accountService.createNewAccount(accountDTO, userId);
     }
 }
