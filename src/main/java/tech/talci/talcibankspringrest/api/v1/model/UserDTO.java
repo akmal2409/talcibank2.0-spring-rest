@@ -27,4 +27,5 @@ public class UserDTO {
     private boolean enabled;
     private List<CardDTO> cards;
     private List<AccountDTO> accounts;
+    private String userUrl;
 }

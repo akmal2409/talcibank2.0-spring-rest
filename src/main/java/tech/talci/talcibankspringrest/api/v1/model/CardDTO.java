@@ -3,9 +3,12 @@ package tech.talci.talcibankspringrest.api.v1.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import tech.talci.talcibankspringrest.domain.CardTransfer;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,8 +19,11 @@ public class CardDTO {
     private Long number;
     private String holdersName;
     private Date expirationDate;
-    private Date issueDate;
+    private Instant issueDate;
+    private int cvv;
     private String cardType;
-    private String Currency;
+    private String currency;
     private BigDecimal balance;
+    private List<CardTransfer> cardTransfers;
+    private String cardUrl;
 }

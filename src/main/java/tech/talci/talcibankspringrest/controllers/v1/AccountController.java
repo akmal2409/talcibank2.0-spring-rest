@@ -17,22 +17,9 @@ public class AccountController {
 
     static final String BASE_URL = "/api/v1/account";
 
-    private final AccountRepository accountRepository;
-    UserRepository userRepository;
-    AccountMapper mapper = AccountMapper.INSTANCE;
-
     @PostMapping("/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
     public AccountDTO createAccount(@RequestBody AccountDTO accountDTO, @PathVariable Long userId){
-        Account account = mapper.accountDTOToAccount(accountDTO);
-
-        account.setUser(userRepository.findById(userId).orElse(null));
-
-        Account savedAccount = accountRepository.save(account);
-
-        AccountDTO savedAccountDto = mapper.accountToAccountDTO(savedAccount);
-        savedAccountDto.setId(savedAccount.getId());
-
-        return savedAccountDto;
+        return null;
     }
 }
