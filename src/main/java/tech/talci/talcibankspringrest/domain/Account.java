@@ -25,7 +25,7 @@ public class Account {
 
     private Long number;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
@@ -39,12 +39,16 @@ public class Account {
     @Enumerated(value = EnumType.STRING)
     private AccountType accountType;
 
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CardTransfer> cardTransfers = new ArrayList<>();
 
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Withdrawal> withdrawals = new ArrayList<>();
 
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Deposit> deposits = new ArrayList<>();
 
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BankTransfer>  bankTransfers = new ArrayList<>();
 
 }
