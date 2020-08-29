@@ -24,7 +24,6 @@ public class Account {
 
     private String name;
 
-    @NotEmpty(message = "Account name is required")
     private Long number;
 
     @ManyToOne(fetch = FetchType.LAZY)
