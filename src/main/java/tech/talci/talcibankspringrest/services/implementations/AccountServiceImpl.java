@@ -1,6 +1,7 @@
 package tech.talci.talcibankspringrest.services.implementations;
 
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import tech.talci.talcibankspringrest.api.v1.mapper.AccountMapper;
 import tech.talci.talcibankspringrest.api.v1.dto.AccountDTO;
 import tech.talci.talcibankspringrest.domain.Account;
@@ -12,6 +13,7 @@ import tech.talci.talcibankspringrest.services.AccountService;
 
 
 @AllArgsConstructor
+@Service
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;

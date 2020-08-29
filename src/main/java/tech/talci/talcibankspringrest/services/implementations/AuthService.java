@@ -7,11 +7,13 @@ import tech.talci.talcibankspringrest.api.v1.dto.RegisterRequest;
 import tech.talci.talcibankspringrest.domain.NotificationEmail;
 import tech.talci.talcibankspringrest.domain.User;
 import tech.talci.talcibankspringrest.domain.VerificationToken;
+import tech.talci.talcibankspringrest.exceptions.ResourceNotFoundException;
 import tech.talci.talcibankspringrest.repositories.UserRepository;
 import tech.talci.talcibankspringrest.repositories.VerificationTokenRepository;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -53,4 +55,21 @@ public class AuthService {
     }
 
 
+    public void verifyAccount(String token) {
+        Optional <VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
+
+        verificationToken.orElseThrow(() -> new ResourceNotFoundException("Token was not found: " + token));
+
+        fetchUserAndEnable(verificationToken.get());
+    }
+
+    @Transactional
+    void fetchUserAndEnable(VerificationToken verificationToken) {
+        User user = userRepository.findByUsername(verificationToken.getUser().getUsername())
+                .orElseThrow(() -> new ResourceNotFoundException("User was not found: " + verificationToken.getUser()
+                        .getUsername()));
+        user.setEnabled(true);
+
+        userRepository.save(user);
+    }
 }

@@ -2,6 +2,7 @@ package tech.talci.talcibankspringrest.controllers.v1;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.talci.talcibankspringrest.api.v1.dto.RegisterRequest;
 import tech.talci.talcibankspringrest.services.implementations.AuthService;
@@ -15,14 +16,16 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void signup(@RequestBody RegisterRequest registerRequest){
+    public ResponseEntity signup(@RequestBody RegisterRequest registerRequest){
         authService.signup(registerRequest);
+
+        return new ResponseEntity("User Registration was successful", HttpStatus.CREATED);
     }
 
-    @PostMapping("/accountVerification/{token}")
-    @ResponseStatus(HttpStatus.OK)
-    public void accountVerification(@PathVariable String token){
-        return;
+    @GetMapping("accountVerification/{token}")
+    public ResponseEntity<String> accountVerification(@PathVariable String token){
+        authService.verifyAccount(token);
+
+        return new ResponseEntity<>("Account Activate Successfully", HttpStatus.OK);
     }
 }
