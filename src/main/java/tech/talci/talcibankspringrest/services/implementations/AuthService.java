@@ -1,8 +1,14 @@
 package tech.talci.talcibankspringrest.services.implementations;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import tech.talci.talcibankspringrest.api.v1.dto.AuthenticationResponse;
+import tech.talci.talcibankspringrest.api.v1.dto.LoginRequest;
 import tech.talci.talcibankspringrest.api.v1.dto.RegisterRequest;
 import tech.talci.talcibankspringrest.domain.NotificationEmail;
 import tech.talci.talcibankspringrest.domain.User;
@@ -10,6 +16,7 @@ import tech.talci.talcibankspringrest.domain.VerificationToken;
 import tech.talci.talcibankspringrest.exceptions.ResourceNotFoundException;
 import tech.talci.talcibankspringrest.repositories.UserRepository;
 import tech.talci.talcibankspringrest.repositories.VerificationTokenRepository;
+import tech.talci.talcibankspringrest.security.JwtProvider;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
@@ -24,6 +31,8 @@ public class AuthService {
     private final UserRepository userRepository;
     private final VerificationTokenRepository verificationTokenRepository;
     private final MailService mailService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtProvider jwtProvider;
 
     @Transactional
     public void signup(RegisterRequest registerRequest) {
@@ -71,5 +80,14 @@ public class AuthService {
         user.setEnabled(true);
 
         userRepository.save(user);
+    }
+
+    public AuthenticationResponse login(LoginRequest loginRequest) {
+        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+                loginRequest.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
+
+        String token = jwtProvider.generateToken(authenticate);
+        return new AuthenticationResponse(token, loginRequest.getUsername());
     }
 }

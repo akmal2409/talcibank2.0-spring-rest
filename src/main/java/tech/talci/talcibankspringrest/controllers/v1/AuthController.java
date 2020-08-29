@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tech.talci.talcibankspringrest.api.v1.dto.AuthenticationResponse;
+import tech.talci.talcibankspringrest.api.v1.dto.LoginRequest;
 import tech.talci.talcibankspringrest.api.v1.dto.RegisterRequest;
 import tech.talci.talcibankspringrest.services.implementations.AuthService;
 
@@ -27,5 +29,11 @@ public class AuthController {
         authService.verifyAccount(token);
 
         return new ResponseEntity<>("Account Activate Successfully", HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    public AuthenticationResponse login(@RequestBody LoginRequest loginRequest){
+        return authService.login(loginRequest);
     }
 }
