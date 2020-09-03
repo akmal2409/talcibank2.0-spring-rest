@@ -1,6 +1,7 @@
 package tech.talci.talcibankspringrest.services;
 
 import tech.talci.talcibankspringrest.api.v1.dto.*;
+import tech.talci.talcibankspringrest.domain.Account;
 
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface AccountService{
     void withdraw(WithdrawalDTO withdrawalDTO, Long accountId);
 
     void deposit(DepositDTO depositDTO, Long accountId);
+
+    AccountDTO saveAndReturnDTO(Account account);
 }

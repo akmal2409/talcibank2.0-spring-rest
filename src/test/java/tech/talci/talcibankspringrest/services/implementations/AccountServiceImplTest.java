@@ -7,7 +7,11 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import tech.talci.talcibankspringrest.api.v1.dto.AccountDTO;
+import tech.talci.talcibankspringrest.api.v1.dto.AccountRequest;
 import tech.talci.talcibankspringrest.domain.Account;
+import tech.talci.talcibankspringrest.domain.AccountType;
+import tech.talci.talcibankspringrest.domain.Currency;
+import tech.talci.talcibankspringrest.domain.User;
 import tech.talci.talcibankspringrest.repositories.AccountRepository;
 import tech.talci.talcibankspringrest.repositories.DepositRepository;
 import tech.talci.talcibankspringrest.repositories.UserRepository;
@@ -19,6 +23,7 @@ import tech.talci.talcibankspringrest.validators.WithdrawalValidator;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -48,6 +53,8 @@ class AccountServiceImplTest {
 
     final String NAME = "TEST";
     final Long NUMBER = 23123L;
+    final Currency CURRENCY = Currency.DOLLAR;
+    final AccountType ACCOUNT_TYPE = AccountType.BUSNESS;
     final Long ID = 2L;
     Account account;
 
@@ -78,15 +85,49 @@ class AccountServiceImplTest {
         verify(accountRepository, times(1)).findById(anyLong());
     }
 
+    //todo: write an integration test for the method below
+    /*
     @Test
     void createNewAccount() {
-    }
+        //given
+        AccountDTO accountRequest = new Account();
+        accountRequest.setName(NAME);
+        accountRequest.setAccountType(ACCOUNT_TYPE.toString());
+        accountRequest.setCurrency(CURRENCY.toString());
 
-    @Test
-    void saveAccountDTO() {
-    }
+        User user = new User();
+        user.setUserId(ID);
 
+        given(userRepository.findById(ID)).willReturn(Optional.of(user));
+        given(accountService.saveAccountDTO(any(Account.class))).willReturn(accountRequest)
+
+        //when
+        AccountDTO returnDto = accountService.createNewAccount(accountRequest, ID);
+
+        //then
+        assertNotNull(returnDto);
+        assertEquals(NAME, returnDto.getName());
+        assertEquals(CURRENCY.toString(), returnDto.getCurrency());
+        assertEquals(ACCOUNT_TYPE, returnDto.getAccountType());
+    }
+*/
     @Test
-    void deleteAccountById() {
+    void saveAndReturnDto() {
+        //given
+        Account account = new Account();
+        account.setId(ID);
+        account.setName(NAME);
+        account.setNumber(NUMBER);
+
+        given(accountRepository.save(any())).willReturn(account);
+
+        //when
+        AccountDTO accountDTO = accountService.saveAndReturnDTO(new Account());
+
+        //then
+        assertNotNull(accountDTO);
+        assertEquals(ID, account.getId());
+        assertEquals(NUMBER, account.getNumber());
+        assertEquals(NAME, account.getName());
     }
 }
