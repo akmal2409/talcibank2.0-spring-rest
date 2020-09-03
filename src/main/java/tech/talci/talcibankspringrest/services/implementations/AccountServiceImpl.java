@@ -1,8 +1,6 @@
 package tech.talci.talcibankspringrest.services.implementations;
 
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.With;
+
 import org.springframework.stereotype.Service;
 import tech.talci.talcibankspringrest.api.v1.dto.*;
 import tech.talci.talcibankspringrest.api.v1.mapper.AccountMapper;
@@ -21,7 +19,6 @@ import tech.talci.talcibankspringrest.validators.WithdrawalValidator;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
