@@ -4,11 +4,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import tech.talci.talcibankspringrest.api.v1.dto.AccountDTO;
 import tech.talci.talcibankspringrest.domain.Account;
 import tech.talci.talcibankspringrest.repositories.AccountRepository;
+import tech.talci.talcibankspringrest.repositories.DepositRepository;
 import tech.talci.talcibankspringrest.repositories.UserRepository;
+import tech.talci.talcibankspringrest.repositories.WithdrawalRepository;
 import tech.talci.talcibankspringrest.services.AccountService;
+import tech.talci.talcibankspringrest.validators.DepositValidator;
+import tech.talci.talcibankspringrest.validators.WithdrawalValidator;
 
 import java.util.Optional;
 
@@ -26,6 +32,18 @@ class AccountServiceImplTest {
     @Mock
     AccountRepository accountRepository;
 
+    @Mock
+    WithdrawalRepository withdrawalRepository;
+
+
+    WithdrawalValidator withdrawalValidator;
+
+    DepositValidator depositValidator;
+
+    @Mock
+    DepositRepository depositRepository;
+
+
     AccountService accountService;
 
     final String NAME = "TEST";
@@ -37,7 +55,8 @@ class AccountServiceImplTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        accountService = new AccountServiceImpl(accountRepository, userRepository);
+        accountService = new AccountServiceImpl(accountRepository, userRepository, withdrawalRepository, depositRepository,
+                withdrawalValidator, depositValidator);
         account = new Account();
         account.setId(ID);
         account.setName(NAME);

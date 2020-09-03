@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.math.BigDecimal;
+import java.time.Instant;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountListDTO {
-    List<AccountDTO> accounts;
+public class DepositDTO {
+    private BigDecimal amount;
 }

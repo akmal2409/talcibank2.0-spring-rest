@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @Data
@@ -16,12 +17,9 @@ public class Deposit {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    private Double amount;
+    private BigDecimal amount;
     private Instant date;
 
     @ManyToOne
     private Account account;
-
-    @Enumerated(value = EnumType.STRING)
-    private DepositType depositType;
 }

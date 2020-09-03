@@ -20,7 +20,6 @@ public class UserDTO {
     private String image;
     private String phoneNumber;
     private Date birthDate;
-    private String secretPhrase;
     private Instant created;
     private String username;
     private String email;

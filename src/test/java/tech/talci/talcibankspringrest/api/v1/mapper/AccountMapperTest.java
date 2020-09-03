@@ -71,10 +71,6 @@ class AccountMapperTest {
         account.setNumber(NUMBER);
         account.setBalance(BALANCE);
         account.setCurrency(CURRENCY.toString());
-        account.getBankTransfers().add(new BankTransfer());
-        account.getWithdrawals().add(new Withdrawal());
-        account.getDeposits().add(new Deposit());
-
         //when
         Account convertedAccount = accountMapper.accountDTOToAccount(account);
 
@@ -86,8 +82,5 @@ class AccountMapperTest {
         assertEquals(NUMBER, convertedAccount.getNumber());
         assertEquals(CURRENCY, convertedAccount.getCurrency());
         assertEquals(BALANCE, convertedAccount.getBalance());
-        assertEquals(1, convertedAccount.getBankTransfers().size());
-        assertEquals(1, convertedAccount.getWithdrawals().size());
-        assertEquals(1, convertedAccount.getDeposits().size());
     }
 }
