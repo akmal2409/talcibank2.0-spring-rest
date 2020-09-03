@@ -5,9 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.talci.talcibankspringrest.api.v1.dto.*;
-import tech.talci.talcibankspringrest.domain.BankTransfer;
 import tech.talci.talcibankspringrest.services.AccountService;
-import tech.talci.talcibankspringrest.services.UserService;
 
 
 @RestController
@@ -54,7 +52,7 @@ public class AccountController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public AccountListDTO listAllAccounts(){
+    public AccountListDTO listAllAccounts(@PathVariable Long userId){
 
         return accountService.findAllDTO();
     }
