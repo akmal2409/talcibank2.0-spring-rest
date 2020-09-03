@@ -12,12 +12,10 @@ import tech.talci.talcibankspringrest.domain.Account;
 import tech.talci.talcibankspringrest.domain.AccountType;
 import tech.talci.talcibankspringrest.domain.Currency;
 import tech.talci.talcibankspringrest.domain.User;
-import tech.talci.talcibankspringrest.repositories.AccountRepository;
-import tech.talci.talcibankspringrest.repositories.DepositRepository;
-import tech.talci.talcibankspringrest.repositories.UserRepository;
-import tech.talci.talcibankspringrest.repositories.WithdrawalRepository;
+import tech.talci.talcibankspringrest.repositories.*;
 import tech.talci.talcibankspringrest.services.AccountService;
 import tech.talci.talcibankspringrest.validators.DepositValidator;
+import tech.talci.talcibankspringrest.validators.TransferValidator;
 import tech.talci.talcibankspringrest.validators.WithdrawalValidator;
 
 import java.util.Optional;
@@ -45,9 +43,13 @@ class AccountServiceImplTest {
 
     DepositValidator depositValidator;
 
+    TransferValidator transferValidator;
+
     @Mock
     DepositRepository depositRepository;
 
+    @Mock
+    BankTransferRepository bankTransferRepository;
 
     AccountService accountService;
 
@@ -63,7 +65,7 @@ class AccountServiceImplTest {
         MockitoAnnotations.initMocks(this);
 
         accountService = new AccountServiceImpl(accountRepository, userRepository, withdrawalRepository, depositRepository,
-                withdrawalValidator, depositValidator);
+                withdrawalValidator, depositValidator, transferValidator, bankTransferRepository);
         account = new Account();
         account.setId(ID);
         account.setName(NAME);

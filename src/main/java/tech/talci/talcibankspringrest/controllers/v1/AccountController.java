@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.talci.talcibankspringrest.api.v1.dto.*;
+import tech.talci.talcibankspringrest.domain.BankTransfer;
 import tech.talci.talcibankspringrest.services.AccountService;
 import tech.talci.talcibankspringrest.services.UserService;
 
@@ -15,7 +16,6 @@ import tech.talci.talcibankspringrest.services.UserService;
 public class AccountController {
 
     private final AccountService accountService;
-    private final UserService userService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -36,6 +36,14 @@ public class AccountController {
         accountService.withdraw(withdrawalDTO, accountId);
 
         return new ResponseEntity<>("Withdrawal was successful", HttpStatus.OK);
+    }
+
+    @PostMapping("/{accountId}/bankTransfer")
+    public ResponseEntity<String> transferFunds(@RequestBody BankTransferDTO bankTransferDTO,
+                                                @PathVariable Long accountId){
+        accountService.bankTransfer(bankTransferDTO, accountId);
+
+        return new ResponseEntity<>("Transfer was successful", HttpStatus.OK);
     }
 
     @GetMapping("/{accountId}")

@@ -15,10 +15,7 @@ public class WithdrawalValidator {
     public boolean isValid(Withdrawal withdrawal, Account account){
 
         BigDecimal positiveBalance = new BigDecimal("0.0");
-        if((account.getBalance().subtract(withdrawal.getAmount())).compareTo(positiveBalance) == 1
-        && withdrawal.getAmount().compareTo(positiveBalance) == 1){
-            return true;
-        }
-        return false;
+        return (account.getBalance().subtract(withdrawal.getAmount())).compareTo(positiveBalance) == 1
+                && withdrawal.getAmount().compareTo(positiveBalance) == 1;
     }
 }

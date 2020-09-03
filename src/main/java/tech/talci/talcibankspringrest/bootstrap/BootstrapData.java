@@ -44,5 +44,6 @@ public class BootstrapData implements CommandLineRunner {
             userRepository.save(user);
             accountRepository.save(account);
         }
+
     }
 }

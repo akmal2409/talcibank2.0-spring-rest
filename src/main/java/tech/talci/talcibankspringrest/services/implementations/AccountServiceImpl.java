@@ -9,14 +9,13 @@ import tech.talci.talcibankspringrest.api.v1.mapper.WithdrawalMapper;
 import tech.talci.talcibankspringrest.domain.*;
 import tech.talci.talcibankspringrest.exceptions.MoneyException;
 import tech.talci.talcibankspringrest.exceptions.ResourceNotFoundException;
-import tech.talci.talcibankspringrest.repositories.AccountRepository;
-import tech.talci.talcibankspringrest.repositories.DepositRepository;
-import tech.talci.talcibankspringrest.repositories.UserRepository;
-import tech.talci.talcibankspringrest.repositories.WithdrawalRepository;
+import tech.talci.talcibankspringrest.repositories.*;
 import tech.talci.talcibankspringrest.services.AccountService;
 import tech.talci.talcibankspringrest.validators.DepositValidator;
+import tech.talci.talcibankspringrest.validators.TransferValidator;
 import tech.talci.talcibankspringrest.validators.WithdrawalValidator;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.stream.Collectors;
@@ -32,19 +31,25 @@ public class AccountServiceImpl implements AccountService {
     private final WithdrawalMapper withdrawalMapper = WithdrawalMapper.INSTANCE;
     private final DepositMapper depositMapper = DepositMapper.INSTANCE;
     private final WithdrawalRepository withdrawalRepository;
+    private final BankTransferRepository bankTransferRepository;
     private final DepositRepository depositRepository;
     private final WithdrawalValidator withdrawalValidator;
     private final DepositValidator depositValidator;
+    private final TransferValidator transferValidator;
 
     public AccountServiceImpl(AccountRepository accountRepository, UserRepository userRepository,
                               WithdrawalRepository withdrawalRepository, DepositRepository depositRepository,
-                              WithdrawalValidator withdrawalValidator, DepositValidator depositValidator) {
+                              WithdrawalValidator withdrawalValidator, DepositValidator depositValidator,
+                              TransferValidator transferValidator,
+                              BankTransferRepository bankTransferRepository) {
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
         this.withdrawalRepository = withdrawalRepository;
         this.depositRepository = depositRepository;
         this.withdrawalValidator = withdrawalValidator;
         this.depositValidator = depositValidator;
+        this.transferValidator = transferValidator;
+        this.bankTransferRepository = bankTransferRepository;
     }
 
     @Override
@@ -76,6 +81,7 @@ public class AccountServiceImpl implements AccountService {
         return saveAndReturnDTO(account);
     }
 
+    @Transactional
     @Override
     public AccountDTO saveAccountDTO(Long id, AccountDTO accountDTO) {
         Account account = accountMapper.accountDTOToAccount(accountDTO);
@@ -100,6 +106,7 @@ public class AccountServiceImpl implements AccountService {
 
     }
 
+    @Transactional
     @Override
     public void withdraw(WithdrawalDTO withdrawalDTO, Long accountId) {
 
@@ -120,6 +127,7 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
+    @Transactional
     @Override
     public void deposit(DepositDTO depositDTO, Long accountId) {
         Account account = accountRepository.findById(Long.valueOf(accountId)).orElseThrow(() ->
@@ -137,6 +145,43 @@ public class AccountServiceImpl implements AccountService {
             saveAndReturnDTO(account);
         } else {
             throw new MoneyException("Deposit was unsuccessful!");
+        }
+    }
+
+    @Transactional
+    @Override
+    public void bankTransfer(BankTransferDTO bankTransferDTO, Long accountId) {
+        Account sender = accountRepository.findById(accountId)
+                .orElseThrow(() -> new ResourceNotFoundException("Account (Sender) was not found"));
+
+        BankTransfer bankTransfer = new BankTransfer();
+        bankTransfer.setRecipientNumber(Long.valueOf(bankTransferDTO.getRecipientNumber()));
+        bankTransfer.setDescription(bankTransferDTO.getDescription());
+        bankTransfer.setAmount(bankTransferDTO.getAmount());
+
+        Long accountNumber = bankTransfer.getRecipientNumber();
+        Account recipient = accountRepository.findAccountByNumber(accountNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("Account (Recipient) was not found!"));
+
+        if(transferValidator.validateBankTransfer(sender, bankTransfer.getAmount())){
+            BigDecimal newBalanceSender = sender.getBalance().subtract(bankTransfer.getAmount());
+            sender.setBalance(newBalanceSender);
+
+            BigDecimal newBalanceRecipient = recipient.getBalance().add(bankTransfer.getAmount());
+            recipient.setBalance(newBalanceRecipient);
+
+            bankTransfer.setDate(Instant.now());
+            bankTransfer.setRecipientNumber(recipient.getNumber());
+            bankTransfer.setSender(sender);
+
+            BankTransfer savedTransfer = bankTransferRepository.save(bankTransfer);
+
+            sender.getBankTransfers().add(savedTransfer);
+
+            accountRepository.save(sender);
+            accountRepository.save(recipient);
+        } else {
+            throw new MoneyException("Transaction was unsuccessful");
         }
     }
 

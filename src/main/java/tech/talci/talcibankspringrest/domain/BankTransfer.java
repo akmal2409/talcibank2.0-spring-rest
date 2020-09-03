@@ -32,7 +32,4 @@ public class BankTransfer {
 
     @Column(name = "recipient_number")
     private Long recipientNumber;
-
-    @Enumerated(value = EnumType.STRING)
-    private Currency currency;
 }

@@ -22,4 +22,6 @@ public interface AccountService{
     void deposit(DepositDTO depositDTO, Long accountId);
 
     AccountDTO saveAndReturnDTO(Account account);
+
+    void bankTransfer(BankTransferDTO bankTransferDTO, Long accountId);
 }
