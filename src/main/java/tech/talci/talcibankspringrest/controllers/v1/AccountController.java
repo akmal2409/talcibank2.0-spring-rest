@@ -54,6 +54,6 @@ public class AccountController {
     @ResponseStatus(HttpStatus.OK)
     public AccountListDTO listAllAccounts(@PathVariable Long userId){
 
-        return accountService.findAllDTO();
+        return accountService.findAllDTO(userId);
     }
 }

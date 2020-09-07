@@ -96,10 +96,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountListDTO findAllDTO() {
+    public AccountListDTO findAllDTO(Long userId) {
         return new AccountListDTO(
                 accountRepository.findAll()
                         .stream()
+                        .filter(account -> account.getUser().getUserId() == userId)
                         .map(accountMapper::accountToAccountDTO)
                         .collect(Collectors.toList())
         );

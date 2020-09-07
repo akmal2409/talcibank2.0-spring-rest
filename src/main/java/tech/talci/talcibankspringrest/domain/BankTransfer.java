@@ -1,5 +1,6 @@
 package tech.talci.talcibankspringrest.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class BankTransfer {
 
     @ManyToOne
     @JoinColumn(name = "account_id")
+    @JsonBackReference
     private Account sender;
 
     @NotEmpty(message = "Transfer description is required")

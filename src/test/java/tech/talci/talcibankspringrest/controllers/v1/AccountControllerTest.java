@@ -19,6 +19,7 @@ import java.util.Arrays;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -87,7 +88,7 @@ class AccountControllerTest extends AbstractTestController{
         //given
         AccountListDTO accountListDTO = new AccountListDTO(Arrays.asList(new AccountDTO(), new AccountDTO()));
 
-        given(accountService.findAllDTO()).willReturn(accountListDTO);
+        given(accountService.findAllDTO(anyLong())).willReturn(accountListDTO);
 
         //when&then
         mockMvc.perform(get(BASE_URL)
@@ -95,7 +96,7 @@ class AccountControllerTest extends AbstractTestController{
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accounts", hasSize(2)));
 
-          verify(accountService, times(1)).findAllDTO();
+          verify(accountService, times(1)).findAllDTO(anyLong());
     }
 
     @Test
