@@ -74,4 +74,9 @@ public class CardServiceImpl implements CardService {
         returnDTO.setId(savedCard.getId());
         return returnDTO;
     }
+
+    @Override
+    public void deposit(Long cardId, BigDecimal amount) {
+
+    }
 }

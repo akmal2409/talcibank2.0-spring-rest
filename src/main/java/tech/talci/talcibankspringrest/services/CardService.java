@@ -6,9 +6,13 @@ import tech.talci.talcibankspringrest.api.v1.dto.CardDTO;
 import tech.talci.talcibankspringrest.api.v1.dto.CardListDTO;
 import tech.talci.talcibankspringrest.domain.User;
 
+import java.math.BigDecimal;
+
 public interface CardService {
 
     CardListDTO findAllDTO();
 
     CardDTO createCard(Long userId, CardCreateRequest cardCreateRequest);
+
+    void deposit(Long cardId, BigDecimal amount);
 }
