@@ -21,6 +21,7 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @Column(name = "number")
     private Long number;
 
     @ManyToOne

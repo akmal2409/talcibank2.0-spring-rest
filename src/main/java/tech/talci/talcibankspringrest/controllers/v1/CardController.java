@@ -35,4 +35,19 @@ public class CardController {
 
         return new ResponseEntity<>("Funds were deposited!", HttpStatus.OK);
     }
+
+    @PostMapping("/{cardId}/withdraw/{amount}")
+    public ResponseEntity<String> withdrawFunds(@PathVariable Long cardId, @PathVariable BigDecimal amount){
+        cardService.withdraw(cardId, amount);
+
+        return new ResponseEntity<>("Withdrawal was successful!", HttpStatus.OK);
+    }
+
+    @PostMapping("/{cardId}/transfer/{recipientNumber}/{amount}")
+    public ResponseEntity<String> transfer(@PathVariable Long cardId, @PathVariable Long recipientNumber,
+                                            @PathVariable BigDecimal amount){
+        cardService.transfer(cardId, recipientNumber, amount);
+
+        return new ResponseEntity<>("Transfer was successful", HttpStatus.OK);
+    }
 }

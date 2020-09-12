@@ -15,4 +15,8 @@ public interface CardService {
     CardDTO createCard(Long userId, CardCreateRequest cardCreateRequest);
 
     void deposit(Long cardId, BigDecimal amount);
+
+    void withdraw(Long cardId, BigDecimal amount);
+
+    void transfer(Long senderCardId, Long recipientCardNumber, BigDecimal amount);
 }

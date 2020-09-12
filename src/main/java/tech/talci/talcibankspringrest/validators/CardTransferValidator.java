@@ -1,9 +1,11 @@
 package tech.talci.talcibankspringrest.validators;
 
+import org.springframework.stereotype.Component;
 import tech.talci.talcibankspringrest.domain.Card;
 
 import java.math.BigDecimal;
 
+@Component
 public class CardTransferValidator {
 
     BigDecimal positive = new BigDecimal("0.0");
