@@ -23,7 +23,7 @@ public class CardController {
     }
 
     @PostMapping
-    public CardDTO createCard(@PathVariable Long userId , CardCreateRequest cardCreateRequest){
+    public CardDTO createCard(@PathVariable Long userId , @RequestBody CardCreateRequest cardCreateRequest){
         return cardService.createCard(userId, cardCreateRequest);
     }
 }

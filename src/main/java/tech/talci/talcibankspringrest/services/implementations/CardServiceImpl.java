@@ -10,6 +10,7 @@ import tech.talci.talcibankspringrest.domain.Card;
 import tech.talci.talcibankspringrest.domain.CardType;
 import tech.talci.talcibankspringrest.domain.Currency;
 import tech.talci.talcibankspringrest.domain.User;
+import tech.talci.talcibankspringrest.domain.enumConverters.CardTypeConverter;
 import tech.talci.talcibankspringrest.exceptions.ResourceNotFoundException;
 import tech.talci.talcibankspringrest.repositories.CardRepository;
 import tech.talci.talcibankspringrest.repositories.UserRepository;
@@ -28,6 +29,7 @@ public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
     private final UserRepository userRepository;
     private final CardMapper cardMapper = CardMapper.INSTANCE;
+    private final CardTypeConverter cardTypeConverter;
 
     private static Long cardNumber = 4023060102037654L;
     private static Integer cvv = 111;
@@ -59,7 +61,8 @@ public class CardServiceImpl implements CardService {
         createdCard.setUser(user);
         createdCard.setBalance(new BigDecimal("0.0"));
         createdCard.setCardType(CardType.valueOf(cardCreateRequest.getCardType()));
-        createdCard.setCurrency(Currency.valueOf(cardCreateRequest.getCurrency()));
+        Currency currency = Currency.valueOf(cardCreateRequest.getCurrency());
+        createdCard.setCurrency(currency);
 
         return saveAndReturnDTO(createdCard);
     }
