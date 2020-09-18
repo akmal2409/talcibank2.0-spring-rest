@@ -1,5 +1,5 @@
 # Build Stage of my Spring Boot application
-FROM openjdk:11-jdk-alpine as build
+FROM openjdk:11-jdk as build
 
 WORKDIR /app
 
@@ -20,7 +20,7 @@ RUN ./mvnw package -DskipTests
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
 # Production stage for spring boo image
-FROM openjdk:11-jdk-alpine as production
+FROM openjdk:11-jdk as production
 ARG DEPENDENCY=/app/target/dependency
 
 #Copy dependencies from build artifact
