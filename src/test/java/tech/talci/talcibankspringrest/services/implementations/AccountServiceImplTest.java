@@ -56,7 +56,7 @@ class AccountServiceImplTest {
     final String NAME = "TEST";
     final Long NUMBER = 23123L;
     final Currency CURRENCY = Currency.DOLLAR;
-    final AccountType ACCOUNT_TYPE = AccountType.BUSNESS;
+    final AccountType ACCOUNT_TYPE = AccountType.BUSINESS;
     final Long ID = 2L;
     Account account;
 

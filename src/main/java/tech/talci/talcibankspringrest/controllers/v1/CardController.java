@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import tech.talci.talcibankspringrest.api.v1.dto.CardCreateRequest;
 import tech.talci.talcibankspringrest.api.v1.dto.CardDTO;
 import tech.talci.talcibankspringrest.api.v1.dto.CardListDTO;
+import tech.talci.talcibankspringrest.api.v1.dto.CardTransferDTO;
+import tech.talci.talcibankspringrest.repositories.CardRepository;
 import tech.talci.talcibankspringrest.services.CardService;
 
 import java.math.BigDecimal;
@@ -17,6 +19,7 @@ import java.math.BigDecimal;
 public class CardController {
 
     private final CardService cardService;
+    private final CardRepository cardRepository;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -43,11 +46,15 @@ public class CardController {
         return new ResponseEntity<>("Withdrawal was successful!", HttpStatus.OK);
     }
 
-    @PostMapping("/{cardId}/transfer/{recipientNumber}/{amount}")
-    public ResponseEntity<String> transfer(@PathVariable Long cardId, @PathVariable Long recipientNumber,
-                                            @PathVariable BigDecimal amount){
-        cardService.transfer(cardId, recipientNumber, amount);
+    @PostMapping("/{cardId}/transfer/")
+    public ResponseEntity<String> transfer(@PathVariable Long cardId, @RequestBody CardTransferDTO cardTransferDTO){
+        cardService.transfer(cardId, cardTransferDTO);
 
         return new ResponseEntity<>("Transfer was successful", HttpStatus.OK);
+    }
+
+    @PostMapping("/{cardId}")
+    public void delete(@PathVariable Long cardId){
+        cardRepository.deleteById(cardId);
     }
 }

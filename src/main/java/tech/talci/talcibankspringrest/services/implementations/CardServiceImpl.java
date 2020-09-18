@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import tech.talci.talcibankspringrest.api.v1.dto.CardCreateRequest;
 import tech.talci.talcibankspringrest.api.v1.dto.CardDTO;
 import tech.talci.talcibankspringrest.api.v1.dto.CardListDTO;
+import tech.talci.talcibankspringrest.api.v1.dto.CardTransferDTO;
 import tech.talci.talcibankspringrest.api.v1.mapper.CardMapper;
 import tech.talci.talcibankspringrest.domain.*;
 import tech.talci.talcibankspringrest.domain.enumConverters.CardTypeConverter;
@@ -114,30 +115,31 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public void transfer(Long senderCardId, Long recipientCardNumber, BigDecimal amount) {
+    public void transfer(Long senderCardId, CardTransferDTO cardTransferDTO) {
 
         Card sender = cardRepository.findById(senderCardId)
                 .orElseThrow(() -> new ResourceNotFoundException("Card was not found!"));
 
-        Card recipient = cardRepository.findByNumberContaining(recipientCardNumber)
+        Card recipient = cardRepository.findByNumber(Long.valueOf(cardTransferDTO.getRecipient()))
                 .orElseThrow(() -> new ResourceNotFoundException("Recipient was not found!"));
 
-        if(cardTransferValidator.validate(sender, amount)){
-            BigDecimal sendersBalance = sender.getBalance().subtract(amount);
-            BigDecimal recipientsBalance = recipient.getBalance().add(amount);
+        if(cardTransferValidator.validate(sender, cardTransferDTO.getAmount())){
+            BigDecimal sendersBalance = sender.getBalance().subtract(cardTransferDTO.getAmount());
+            BigDecimal recipientsBalance = recipient.getBalance().add(cardTransferDTO.getAmount());
 
             CardTransfer cardTransfer = new CardTransfer();
-            cardTransfer.setAmount(amount);
+            cardTransfer.setAmount(cardTransferDTO.getAmount());
             cardTransfer.setCard(sender);
             cardTransfer.setDate(Instant.now());
-            cardTransfer.setRecipientCardNumber(recipientCardNumber);
+            cardTransfer.setRecipientCardNumber(cardTransferDTO.getRecipient());
 
+            CardTransfer savedTransfer = cardTransferRepository.save(cardTransfer);
+            sender.getCardTransfers().add(savedTransfer);
             sender.setBalance(sendersBalance);
             recipient.setBalance(recipientsBalance);
 
             cardRepository.save(sender);
             cardRepository.save(recipient);
-            cardTransferRepository.save(cardTransfer);
         } else {
             throw new MoneyException("Transfer was unsuccessful");
         }

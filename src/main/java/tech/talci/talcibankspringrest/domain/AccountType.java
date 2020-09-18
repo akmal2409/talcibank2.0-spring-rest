@@ -1,7 +1,7 @@
 package tech.talci.talcibankspringrest.domain;
 
 public enum AccountType {
-    PERSONAL("Personal"), BUSNESS("Business");
+    PERSONAL("Personal"), BUSINESS("Business");
 
     AccountType(String type){
 

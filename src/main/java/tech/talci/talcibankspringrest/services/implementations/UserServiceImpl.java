@@ -1,10 +1,11 @@
-package tech.talci.talcibankspringrest.services;
+package tech.talci.talcibankspringrest.services.implementations;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import tech.talci.talcibankspringrest.domain.User;
 import tech.talci.talcibankspringrest.exceptions.ResourceNotFoundException;
 import tech.talci.talcibankspringrest.repositories.UserRepository;
+import tech.talci.talcibankspringrest.services.UserService;
 
 @Service
 @AllArgsConstructor

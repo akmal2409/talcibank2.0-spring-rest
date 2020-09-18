@@ -39,7 +39,7 @@ public class BootstrapData implements CommandLineRunner {
             account.setCurrency(Currency.DOLLAR);
             account.setBalance(new BigDecimal("20000.0"));
             account.setNumber(343424234324L);
-            account.setAccountType(AccountType.BUSNESS);
+            account.setAccountType(AccountType.BUSINESS);
             account.setCreatedOn(Instant.now());
             userRepository.save(user);
             accountRepository.save(account);
