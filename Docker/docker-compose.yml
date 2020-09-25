@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+
+  talci-mysql:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=talcibank_docker
+      - MYSQL_USER=talci
+      - MYSQL_PASSWORD=talci
+    ports:
+      - 3306:3306
+
+  talci-main:
+    image: akmalalikhujaev/talcibank2
+    restart: on-failure
+    depends_on:
+      - talci-mysql
+    ports:
+      - 8080:8080
+    environment:
+      - DATABASE_HOST=talci-mysql
+      - DATABASE_USER=talci
+      - DATABASE_PASSWORD=talci
+      - DATABASE_NAME=talcibank_docker
+      - DATABASE_PORT=3306
