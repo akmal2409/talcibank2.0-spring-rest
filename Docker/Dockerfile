@@ -1,13 +1,9 @@
-FROM adoptopenjdk:11-jre-hotspot as builder
-WORKDIR application
-ARG JAR_FILE=targe/*.jar
-COPY ${JAR_FILE} application.jar
-RUN java -Djarmod=layertools -jar application.jar extract
-FROM adoptopenjdk:11-jre-hotspot
-WORKDIR application
-COPY application/dependencies/ ./
-COPY application/sprig-boot-loader/ ./
-COPY application/snapshot-dependencies/ ./
-COPY application/resources/ ./
-COPY application/application/ ./
-ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
+FROM adoptopenjdk/openjdk11:latest
+
+RUN mkdir -p /software/app
+
+ADD talcibank-spring-rest-0.0.1-SNAPSHOT.jar /software/app/app.jar
+
+ENV port=8888
+
+CMD java -jar /software/app/app.jar -Dspring.profiles.active=${SPRING_ACTIVE_PROFILE}
