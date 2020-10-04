@@ -4,6 +4,4 @@ RUN mkdir -p /software/app
 
 ADD talcibank-spring-rest-0.0.1-SNAPSHOT.jar /software/app/app.jar
 
-ENV port=8888
-
 CMD java -jar /software/app/app.jar -Dspring.profiles.active=${SPRING_ACTIVE_PROFILE}
