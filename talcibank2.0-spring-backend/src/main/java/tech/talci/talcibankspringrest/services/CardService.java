@@ -20,4 +20,6 @@ public interface CardService {
     void withdraw(Long cardId, BigDecimal amount);
 
     void transfer(Long senderCardId, CardTransferDTO cardTransferDTO);
+
+    void deleteById(Long cardId);
 }

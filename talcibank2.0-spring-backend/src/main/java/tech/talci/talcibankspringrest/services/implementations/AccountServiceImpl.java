@@ -106,7 +106,15 @@ public class AccountServiceImpl implements AccountService {
     @org.springframework.transaction.annotation.Transactional
     @Override
     public void deleteAccountById(Long id) {
-        accountRepository.deleteById(id);
+        User user = getCurrentUser();
+        Account requestedAccount = accountRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Account was not found!"));
+
+        if(user.getUserId() == requestedAccount.getUser().getUserId()) {
+            accountRepository.deleteById(id);
+        } else {
+            throw new ResourceNotFoundException("Account was not deleted!");
+        }
     }
 
     private User getCurrentUser() {

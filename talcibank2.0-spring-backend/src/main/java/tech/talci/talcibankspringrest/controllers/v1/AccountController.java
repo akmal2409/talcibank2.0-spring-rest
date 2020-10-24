@@ -56,7 +56,7 @@ public class AccountController {
         return accountService.findAllDTO();
     }
 
-    @DeleteMapping("/{accountId]/delete")
+    @DeleteMapping("/{accountId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<String> deleteAccount(@PathVariable Long accountId) {
         accountService.deleteAccountById(accountId);

@@ -53,8 +53,8 @@ public class CardController {
         return new ResponseEntity<>("Transfer was successful", HttpStatus.OK);
     }
 
-    @PostMapping("/{cardId}")
+    @DeleteMapping("/{cardId}")
     public void delete(@PathVariable Long cardId){
-        cardRepository.deleteById(cardId);
+        cardService.deleteById(cardId);
     }
 }

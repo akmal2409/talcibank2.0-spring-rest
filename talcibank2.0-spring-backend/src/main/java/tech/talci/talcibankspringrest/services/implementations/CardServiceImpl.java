@@ -171,4 +171,16 @@ public class CardServiceImpl implements CardService {
         }
 
     }
+
+    @Override
+    public void deleteById(Long cardId) {
+        User user = getCurrentUser();
+        Card requestedCard = cardRepository.getOne(cardId);
+
+        if(user.getUserId() == requestedCard.getUser().getUserId()) {
+            cardRepository.deleteById(cardId);
+        } else {
+            throw new ResourceNotFoundException("Card was not found!");
+        }
+    }
 }
