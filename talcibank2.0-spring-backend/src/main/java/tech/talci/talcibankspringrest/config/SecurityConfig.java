@@ -25,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf().disable()
+        httpSecurity.cors().and().csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/auth/**")
                 .permitAll()
@@ -36,8 +36,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-ui.html",
                         "/webjars/**")
                 .permitAll()
-                .antMatchers("/api/users/{userId}/**")
-                .access("@userSecurity.hasUserId(authentication, #userId)")
+//                .antMatchers("/api/users/{userId}/**")
+//                .access("@userSecurity.hasUserId(authentication, #userId)")
                 .anyRequest()
                 .authenticated();
 

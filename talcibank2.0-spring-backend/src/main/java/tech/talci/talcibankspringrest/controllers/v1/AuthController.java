@@ -8,7 +8,6 @@ import tech.talci.talcibankspringrest.api.v1.dto.AuthenticationResponse;
 import tech.talci.talcibankspringrest.api.v1.dto.LoginRequest;
 import tech.talci.talcibankspringrest.api.v1.dto.RefreshTokenRequest;
 import tech.talci.talcibankspringrest.api.v1.dto.RegisterRequest;
-import tech.talci.talcibankspringrest.domain.RefreshToken;
 import tech.talci.talcibankspringrest.services.implementations.AuthService;
 import tech.talci.talcibankspringrest.services.implementations.RefreshTokenService;
 
@@ -24,10 +23,10 @@ public class AuthController {
     private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/signup")
-    public ResponseEntity signup(@RequestBody RegisterRequest registerRequest){
+    public void signup(@RequestBody RegisterRequest registerRequest){
         authService.signup(registerRequest);
 
-        return new ResponseEntity("User Registration was successful", HttpStatus.CREATED);
+//        return new ResponseEntity("User Registration was successful", HttpStatus.OK);
     }
 
     @GetMapping("accountVerification/{token}")
@@ -38,7 +37,6 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    @ResponseStatus(HttpStatus.OK)
     public AuthenticationResponse login(@RequestBody LoginRequest loginRequest){
         return authService.login(loginRequest);
     }
