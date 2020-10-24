@@ -51,6 +51,9 @@ class AccountServiceImplTest {
     @Mock
     BankTransferRepository bankTransferRepository;
 
+    @Mock
+    AuthService authService;
+
     AccountService accountService;
 
     final String NAME = "TEST";
@@ -65,7 +68,7 @@ class AccountServiceImplTest {
         MockitoAnnotations.initMocks(this);
 
         accountService = new AccountServiceImpl(accountRepository, userRepository, withdrawalRepository, depositRepository,
-                withdrawalValidator, depositValidator, transferValidator, bankTransferRepository);
+                withdrawalValidator, depositValidator, transferValidator, bankTransferRepository, authService);
         account = new Account();
         account.setId(ID);
         account.setName(NAME);

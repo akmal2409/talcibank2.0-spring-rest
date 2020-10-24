@@ -13,7 +13,7 @@ public interface CardService {
 
     CardListDTO findAllDTO();
 
-    CardDTO createCard(Long userId, CardCreateRequest cardCreateRequest);
+    CardDTO createCard(CardCreateRequest cardCreateRequest);
 
     void deposit(Long cardId, BigDecimal amount);
 

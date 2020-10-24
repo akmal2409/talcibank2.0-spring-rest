@@ -89,7 +89,7 @@ class AccountControllerTest extends AbstractTestController{
         //given
         AccountListDTO accountListDTO = new AccountListDTO(Arrays.asList(new AccountDTO(), new AccountDTO()));
 
-        given(accountService.findAllDTO(anyLong())).willReturn(accountListDTO);
+        given(accountService.findAllDTO()).willReturn(accountListDTO);
 
         //when&then
         mockMvc.perform(get(BASE_URL)
@@ -97,7 +97,7 @@ class AccountControllerTest extends AbstractTestController{
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accounts", hasSize(2)));
 
-          verify(accountService, times(1)).findAllDTO(anyLong());
+          verify(accountService, times(1)).findAllDTO();
     }
 
     @Test

@@ -5,6 +5,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import tech.talci.talcibankspringrest.api.v1.dto.AuthenticationResponse;
@@ -49,8 +50,16 @@ public class AuthService {
 
         mailService.sendMail(new NotificationEmail("Please Activate your Account",
                 user.getEmail(), "Thank you for becoming our client at Talci Bank." +
-                "Please click below on a link to activate your account" +
-                "http://localhost:8080/api/auth/accountVerification/" + token));
+                "Please click below on a link to activate your account " +
+                "http://localhost:8080/api/auth/accountVerification/" + token + " end of token."));
+    }
+
+    public User getCurrentUser() {
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+
+        return userRepository.findByUsername(principal.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User was not found! " + principal.getUsername()));
     }
 
     private String generateVerificationToken(User user) {

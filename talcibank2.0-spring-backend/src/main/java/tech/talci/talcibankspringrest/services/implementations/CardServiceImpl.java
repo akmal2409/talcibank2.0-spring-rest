@@ -1,6 +1,7 @@
 package tech.talci.talcibankspringrest.services.implementations;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import tech.talci.talcibankspringrest.api.v1.dto.CardCreateRequest;
 import tech.talci.talcibankspringrest.api.v1.dto.CardDTO;
@@ -37,25 +38,26 @@ public class CardServiceImpl implements CardService {
     private final CardWithdrawalValidator cardWithdrawalValidator;
     private final CardTransferValidator cardTransferValidator;
     private final CardTransferRepository cardTransferRepository;
+    private final AuthService authService;
 
     private static Long cardNumber = 4023060102037654L;
     private static Integer cvv = 111;
 
     @Override
     public CardListDTO findAllDTO() {
+        User user = getCurrentUser();
         return new CardListDTO(
                 cardRepository.findAll()
                 .stream()
+                .filter(card -> card.getUser().getUserId() == user.getUserId())
                 .map(cardMapper::cardToCardDTO)
-                .collect(Collectors.toList())
-                );
+                .collect(Collectors.toList()));
     }
 
     @Override
-    public CardDTO createCard(Long userId, CardCreateRequest cardCreateRequest) {
+    public CardDTO createCard(CardCreateRequest cardCreateRequest) {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found!"));
+        User user = getCurrentUser();
 
         Card createdCard = new Card();
         createdCard.setNumber(cardNumber);
@@ -74,6 +76,12 @@ public class CardServiceImpl implements CardService {
         return saveAndReturnDTO(createdCard);
     }
 
+    private User getCurrentUser() {
+        return userRepository.findByUsername(authService.getCurrentUser().getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User was not found! User:" +
+                        authService.getCurrentUser().getUsername()));
+    }
+
     private CardDTO saveAndReturnDTO(Card card){
         Card savedCard = cardRepository.save(card);
         CardDTO returnDTO = cardMapper.cardToCardDTO(card);
@@ -88,13 +96,19 @@ public class CardServiceImpl implements CardService {
         Card requestedCard = cardRepository.findById(cardId)
                 .orElseThrow(() -> new ResourceNotFoundException("Card was not found!"));
 
-        if(cardDepositValidator.validate(requestedCard, amount)){
-            BigDecimal newBalance = requestedCard.getBalance().add(amount);
+        User user = getCurrentUser();
 
-            requestedCard.setBalance(newBalance);
-            cardRepository.save(requestedCard);
+        if(user.getUserId() == requestedCard.getUser().getUserId()) {
+            if(cardDepositValidator.validate(requestedCard, amount)){
+                BigDecimal newBalance = requestedCard.getBalance().add(amount);
+
+                requestedCard.setBalance(newBalance);
+                cardRepository.save(requestedCard);
+            } else {
+                throw new MoneyException("Deposit was unsuccessful");
+            }
         } else {
-            throw new MoneyException("Deposit was unsuccessful");
+            throw new MoneyException("Deposit was unsuccessful! User/Card not found!");
         }
     }
 
@@ -104,13 +118,19 @@ public class CardServiceImpl implements CardService {
         Card requestedCard = cardRepository.findById(cardId)
                 .orElseThrow(() -> new ResourceNotFoundException("Card was not found"));
 
-        if(cardWithdrawalValidator.validate(requestedCard, amount)){
-            BigDecimal newBalance = requestedCard.getBalance().subtract(amount);
+        User user = getCurrentUser();
 
-            requestedCard.setBalance(newBalance);
-            cardRepository.save(requestedCard);
+        if(user.getUserId() == requestedCard.getUser().getUserId()) {
+            if(cardWithdrawalValidator.validate(requestedCard, amount)){
+                BigDecimal newBalance = requestedCard.getBalance().subtract(amount);
+
+                requestedCard.setBalance(newBalance);
+                cardRepository.save(requestedCard);
+            } else {
+                throw new MoneyException("Withdrawal was unsuccessful!");
+            }
         } else {
-            throw new MoneyException("Withdrawal was unsuccessful!");
+            throw new MoneyException("Withdrawal was unsuccessful! User/card not found! ");
         }
     }
 
@@ -120,28 +140,34 @@ public class CardServiceImpl implements CardService {
         Card sender = cardRepository.findById(senderCardId)
                 .orElseThrow(() -> new ResourceNotFoundException("Card was not found!"));
 
-        Card recipient = cardRepository.findByNumber(Long.valueOf(cardTransferDTO.getRecipient()))
-                .orElseThrow(() -> new ResourceNotFoundException("Recipient was not found!"));
+        User user = getCurrentUser();
 
-        if(cardTransferValidator.validate(sender, cardTransferDTO.getAmount())){
-            BigDecimal sendersBalance = sender.getBalance().subtract(cardTransferDTO.getAmount());
-            BigDecimal recipientsBalance = recipient.getBalance().add(cardTransferDTO.getAmount());
+        if(sender.getUser().getUserId() == user.getUserId()) {
+            Card recipient = cardRepository.findByNumber(Long.valueOf(cardTransferDTO.getRecipient()))
+                    .orElseThrow(() -> new ResourceNotFoundException("Recipient was not found!"));
 
-            CardTransfer cardTransfer = new CardTransfer();
-            cardTransfer.setAmount(cardTransferDTO.getAmount());
-            cardTransfer.setCard(sender);
-            cardTransfer.setDate(Instant.now());
-            cardTransfer.setRecipientCardNumber(cardTransferDTO.getRecipient());
+            if(cardTransferValidator.validate(sender, cardTransferDTO.getAmount())){
+                BigDecimal sendersBalance = sender.getBalance().subtract(cardTransferDTO.getAmount());
+                BigDecimal recipientsBalance = recipient.getBalance().add(cardTransferDTO.getAmount());
 
-            CardTransfer savedTransfer = cardTransferRepository.save(cardTransfer);
-            sender.getCardTransfers().add(savedTransfer);
-            sender.setBalance(sendersBalance);
-            recipient.setBalance(recipientsBalance);
+                CardTransfer cardTransfer = new CardTransfer();
+                cardTransfer.setAmount(cardTransferDTO.getAmount());
+                cardTransfer.setCard(sender);
+                cardTransfer.setDate(Instant.now());
+                cardTransfer.setRecipientCardNumber(cardTransferDTO.getRecipient());
 
-            cardRepository.save(sender);
-            cardRepository.save(recipient);
+                CardTransfer savedTransfer = cardTransferRepository.save(cardTransfer);
+                sender.getCardTransfers().add(savedTransfer);
+                sender.setBalance(sendersBalance);
+                recipient.setBalance(recipientsBalance);
+
+                cardRepository.save(sender);
+                cardRepository.save(recipient);
+            } else {
+                throw new MoneyException("Transfer was unsuccessful");
+            }
         } else {
-            throw new MoneyException("Transfer was unsuccessful");
+            throw  new MoneyException("Transfer was unsuccessful! User/card not found");
         }
 
     }

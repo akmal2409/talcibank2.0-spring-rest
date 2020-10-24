@@ -9,9 +9,9 @@ public interface AccountService{
 
     AccountDTO findById(Long id);
 
-    AccountDTO createNewAccount(AccountRequest accountRequest, Long userId);
+    AccountDTO createNewAccount(AccountRequest accountRequest);
 
-    AccountListDTO findAllDTO(Long userId);
+    AccountListDTO findAllDTO();
 
     AccountDTO saveAccountDTO(Long id, AccountDTO accountDTO);
 

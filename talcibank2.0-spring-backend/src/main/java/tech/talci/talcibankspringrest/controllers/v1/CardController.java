@@ -14,7 +14,7 @@ import tech.talci.talcibankspringrest.services.CardService;
 import java.math.BigDecimal;
 
 @RestController
-@RequestMapping("/api/users/{userId}/cards")
+@RequestMapping("/api/cards")
 @AllArgsConstructor
 public class CardController {
 
@@ -28,8 +28,8 @@ public class CardController {
     }
 
     @PostMapping
-    public CardDTO createCard(@PathVariable Long userId , @RequestBody CardCreateRequest cardCreateRequest){
-        return cardService.createCard(userId, cardCreateRequest);
+    public CardDTO createCard(@RequestBody CardCreateRequest cardCreateRequest){
+        return cardService.createCard(cardCreateRequest);
     }
 
     @PostMapping("/{cardId}/deposit/{amount}")

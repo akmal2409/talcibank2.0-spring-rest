@@ -9,7 +9,7 @@ import tech.talci.talcibankspringrest.services.AccountService;
 
 
 @RestController
-@RequestMapping("/api/users/{userId}/account")
+@RequestMapping("/api/account")
 @AllArgsConstructor
 public class AccountController {
 
@@ -17,8 +17,8 @@ public class AccountController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDTO createAccount(@RequestBody AccountRequest accountRequest, @PathVariable Long userId){
-        return accountService.createNewAccount(accountRequest, userId);
+    public AccountDTO createAccount(@RequestBody AccountRequest accountRequest){
+        return accountService.createNewAccount(accountRequest);
     }
 
     @PostMapping("/{accountId}/deposit")
@@ -52,8 +52,15 @@ public class AccountController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public AccountListDTO listAllAccounts(@PathVariable Long userId){
+    public AccountListDTO listAllAccounts(){
+        return accountService.findAllDTO();
+    }
 
-        return accountService.findAllDTO(userId);
+    @DeleteMapping("/{accountId]/delete")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<String> deleteAccount(@PathVariable Long accountId) {
+        accountService.deleteAccountById(accountId);
+
+        return new ResponseEntity<>("Account was deleted", HttpStatus.OK);
     }
 }
