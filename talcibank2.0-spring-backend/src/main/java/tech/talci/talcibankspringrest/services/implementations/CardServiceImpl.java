@@ -39,6 +39,7 @@ public class CardServiceImpl implements CardService {
     private final CardTransferValidator cardTransferValidator;
     private final CardTransferRepository cardTransferRepository;
     private final AuthService authService;
+    private final MailService mailService;
 
     private static Long cardNumber = 4023060102037654L;
     private static Integer cvv = 111;
@@ -72,6 +73,16 @@ public class CardServiceImpl implements CardService {
         createdCard.setCardType(CardType.valueOf(cardCreateRequest.getCardType()));
         Currency currency = Currency.valueOf(cardCreateRequest.getCurrency());
         createdCard.setCurrency(currency);
+
+        mailService.sendMail(new NotificationEmail(
+                "Your card was successfully created! Talci Bank",
+                createdCard.getUser().getEmail(),
+                "Thank you for opening your debit card at our bank! Your new card number is "
+                        + createdCard.getNumber() + " of type " + createdCard.getCardType().toString().toLowerCase() +
+                        " and has currency: " + createdCard.getCurrency().toString().toLowerCase() + ". " +
+                        "Below we are sending you private details such as pin of your card, please keep it safe!" +
+                        " Your CVV is " + createdCard.getCvv()
+        ));
 
         return saveAndReturnDTO(createdCard);
     }

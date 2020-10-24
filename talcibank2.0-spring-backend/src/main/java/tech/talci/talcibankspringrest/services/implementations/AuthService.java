@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import tech.talci.talcibankspringrest.api.v1.dto.AuthenticationResponse;
 import tech.talci.talcibankspringrest.api.v1.dto.LoginRequest;
+import tech.talci.talcibankspringrest.api.v1.dto.RefreshTokenRequest;
 import tech.talci.talcibankspringrest.api.v1.dto.RegisterRequest;
 import tech.talci.talcibankspringrest.domain.NotificationEmail;
 import tech.talci.talcibankspringrest.domain.User;
@@ -34,6 +35,7 @@ public class AuthService {
     private final MailService mailService;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
+    private final RefreshTokenService refreshTokenService;
 
     @Transactional
     public void signup(RegisterRequest registerRequest) {
@@ -97,6 +99,20 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(authenticate);
 
         String token = jwtProvider.generateToken(authenticate);
-        return new AuthenticationResponse(token, loginRequest.getUsername());
+        return new AuthenticationResponse(Instant.now().plusMillis(jwtProvider.getJwtExpirationTime()),
+                refreshTokenService.generateRefreshToken().getToken(), token, loginRequest.getUsername());
+    }
+
+    public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
+
+        String jwtToken = jwtProvider.generateTokenWithUsername(refreshTokenRequest.getUsername());
+
+        return AuthenticationResponse.builder()
+                .refreshToken(refreshTokenRequest.getRefreshToken())
+                .authenticationToken(jwtToken)
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationTime()))
+                .username(refreshTokenRequest.getUsername())
+                .build();
     }
 }
