@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import tech.talci.talcibankspringrest.api.v1.dto.*;
 import tech.talci.talcibankspringrest.services.AccountService;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/account")
@@ -52,7 +54,7 @@ public class AccountController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public AccountListDTO listAllAccounts(){
+    public List<AccountDTO> listAllAccounts(){
         return accountService.findAllDTO();
     }
 

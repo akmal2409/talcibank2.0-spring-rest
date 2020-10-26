@@ -11,7 +11,7 @@ public interface AccountService{
 
     AccountDTO createNewAccount(AccountRequest accountRequest);
 
-    AccountListDTO findAllDTO();
+    List<AccountDTO> findAllDTO();
 
     AccountDTO saveAccountDTO(Long id, AccountDTO accountDTO);
 

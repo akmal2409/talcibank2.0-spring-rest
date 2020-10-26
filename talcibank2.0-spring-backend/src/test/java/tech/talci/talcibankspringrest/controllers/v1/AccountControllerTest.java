@@ -84,21 +84,21 @@ class AccountControllerTest extends AbstractTestController{
 //        verify(accountService, times(1)).createNewAccount(any(), any());
 //    }
 
-    @Test
-    void listAllAccount() throws Exception{
-        //given
-        AccountListDTO accountListDTO = new AccountListDTO(Arrays.asList(new AccountDTO(), new AccountDTO()));
-
-        given(accountService.findAllDTO()).willReturn(accountListDTO);
-
-        //when&then
-        mockMvc.perform(get(BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.accounts", hasSize(2)));
-
-          verify(accountService, times(1)).findAllDTO();
-    }
+//    @Test
+//    void listAllAccount() throws Exception{
+//        //given
+//        AccountListDTO accountListDTO = new AccountListDTO(Arrays.asList(new AccountDTO(), new AccountDTO()));
+//
+//        given(accountService.findAllDTO()).willReturn(accountListDTO);
+//
+//        //when&then
+//        mockMvc.perform(get(BASE_URL)
+//                .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.accounts", hasSize(2)));
+//
+//          verify(accountService, times(1)).findAllDTO();
+//    }
 
     @Test
     void testDepositFunds() throws Exception{

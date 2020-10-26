@@ -20,6 +20,8 @@ import tech.talci.talcibankspringrest.validators.WithdrawalValidator;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -124,16 +126,16 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountListDTO findAllDTO() {
+    public List<AccountDTO> findAllDTO() {
         User user = getCurrentUser();
 
-        return new AccountListDTO(
+        return new ArrayList<AccountDTO>(
                 accountRepository.findAll()
                         .stream()
                         .filter(account -> account.getUser().getUserId() == user.getUserId())
                         .map(accountMapper::accountToAccountDTO)
-                        .collect(Collectors.toList())
-        );
+                        .collect(Collectors.toList()
+        ));
 
     }
 
