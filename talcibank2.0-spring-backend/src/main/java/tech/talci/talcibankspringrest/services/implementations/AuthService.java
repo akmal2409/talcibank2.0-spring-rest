@@ -1,6 +1,8 @@
 package tech.talci.talcibankspringrest.services.implementations;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationProvider;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -114,5 +116,11 @@ public class AuthService {
                 .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationTime()))
                 .username(refreshTokenRequest.getUsername())
                 .build();
+    }
+
+    public boolean isAuthenticated() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        return !(auth instanceof AnonymousAuthenticationToken) && auth.isAuthenticated();
     }
 }
